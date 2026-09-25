@@ -120,17 +120,21 @@ available in every terminal Claude Code session on this machine):
 
 ## 7. Verify the connection
 
-Start (or restart) a Claude Code terminal session, or open a fresh Code tab
-in the desktop app, and run `/mcp`. You should see `omniroute` listed with a
-green check and a tool count (dozens of tools — `omniroute_get_health`,
-`omniroute_route_request`, `omniroute_list_models_catalog`, and more). If it
-shows "failed" or "disabled" instead, see `docs/TROUBLESHOOTING.md`.
+Start (or restart) a Claude Code terminal session and run `/mcp`. You should
+see `omniroute` listed with a green check and a tool count (dozens of
+tools — `omniroute_get_health`, `omniroute_route_request`,
+`omniroute_list_models_catalog`, and more). If it shows "failed" or
+"disabled" instead, see `docs/TROUBLESHOOTING.md`.
 
-**Desktop app note:** confirmed working, but a newly registered MCP server
-was not picked up by an already-running desktop conversation, or even a new
-conversation in an already-running app instance — only a **full restart of
-the desktop app** actually reloaded it. Do that before concluding it's
-broken.
+**Desktop app: unconfirmed, not recommended yet.** A live tool call
+succeeded from inside one already-running desktop conversation that
+happened to be open while this config was added — but a brand-new
+conversation, even after a full restart of the desktop app itself, did not
+see the `omniroute` server at all (not "failed," genuinely absent from the
+list). That one working case is not evidence this generalizes; it's
+evidence that one conversation picked up a mid-session change. Use the
+terminal for this skill until a fresh desktop conversation reliably shows
+the connection.
 
 ## 8. Install the skill
 

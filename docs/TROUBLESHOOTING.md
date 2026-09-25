@@ -26,14 +26,20 @@ start it (`omniroute serve`), or better, enable `omniroute autostart` so
 this doesn't happen again after a terminal window closes or a reboot (see
 `docs/SETUP.md` step 3).
 
-**Desktop app: `omniroute` doesn't show up at all, in any conversation**
-A newly added or newly working MCP server is not picked up by a
-conversation that was already running, and — confirmed by a real test —
-not picked up by a brand-new conversation in an already-running app
-instance either. Only a full restart of the desktop app itself reloaded it.
-If it's still missing after a full restart, check the app has its own
-MCP-servers management UI (distinct from a raw `~/.claude.json` edit) and
-that the entry actually landed there.
+**Desktop app: `omniroute` doesn't show up at all, in any new conversation (unresolved)**
+Real testing found: one already-running desktop conversation picked up the
+`omniroute` entry mid-session and could call its tools successfully
+(`omniroute_get_health` returned a real response). Every conversation
+opened *after* that — including brand-new ones after a full restart of the
+desktop app itself — showed no `omniroute` entry at all, not even as
+"failed." This was never resolved. It's not a config problem (the same
+`~/.claude.json` entry that worked in the first conversation didn't work in
+any other one), and the cause is unknown — possibly the desktop app treats
+`http`-transport ("Web") MCP servers differently from `stdio` ("Desktop")
+ones for how they get discovered by new conversations, but this wasn't
+confirmed. **Current recommendation: use the terminal for this skill.** If
+you find what actually fixes desktop-app discovery, it's worth reopening
+this.
 
 **`MCP transport is set to "stdio", not "streamable-http". Change it from Settings.`**
 OmniRoute's `mcpTransport` setting defaults to `stdio`, which doesn't match

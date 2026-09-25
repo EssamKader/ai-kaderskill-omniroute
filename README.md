@@ -36,11 +36,18 @@ designs that were tried and didn't work) is in
 
 ## Requirements
 
-- [Claude Code](https://claude.com/claude-code) — **terminal or the desktop
-  app, both confirmed working.** The mechanism is a normal MCP tool call
-  plus a native subagent, not an environment-variable override, so it
-  doesn't depend on a terminal process at all — verified with a live
-  `omniroute_get_health` call from inside a Claude Code desktop session.
+- [Claude Code](https://claude.com/claude-code) — **terminal confirmed
+  working end-to-end. Desktop app support is unconfirmed, not recommended
+  yet.** The mechanism itself (a normal MCP tool call plus a native
+  subagent) has no terminal-specific requirement, and a live
+  `omniroute_get_health` call did succeed from inside one already-running
+  desktop conversation — but a fresh conversation, even after a full
+  desktop-app restart, did not see the `omniroute` server at all. That one
+  working case isn't evidence of general desktop support; it's evidence
+  that conversation happened to pick up the config mid-session. Until a
+  fresh desktop conversation reliably sees it, treat the desktop app as
+  untested for this skill and use the terminal. See
+  `docs/TROUBLESHOOTING.md` for what's been ruled out so far.
 - [OmniRoute](https://www.npmjs.com/package/omniroute) installed and running,
   with at least one non-Anthropic provider connected
 - OmniRoute's MCP server registered with Claude Code and connected (`/mcp`
@@ -63,10 +70,10 @@ desktop app, since there's no terminal to leave running in the background.
 3. Answer its questions as they come — it drives the whole cycle itself,
    pausing between phases for your go-ahead.
 
-**Desktop app:** open a Code tab on the project, run `/ai-kaderskill-omniroute`
-the same way. If `/mcp` doesn't show `omniroute` connected yet, a full app
-restart (not just a new conversation) is what actually reloads a newly
-registered MCP server — see `docs/TROUBLESHOOTING.md`.
+**Desktop app:** not recommended yet — a fresh Code tab conversation did not
+see the `omniroute` MCP server at all, even after a full app restart, in
+real testing. Use the terminal until this is resolved; see
+`docs/TROUBLESHOOTING.md` for what's been tried.
 
 A step-by-step usage guide (Word document) covering the full workflow with
 examples is in [`docs/AI-KaderSkill-OmniRoute-Usage-Guide.docx`](docs/AI-KaderSkill-OmniRoute-Usage-Guide.docx).
