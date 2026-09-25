@@ -44,7 +44,23 @@ Moonshot, etc.), or an OAuth-connected agent subscription (e.g. Google
 Antigravity) under **Providers → OAuth connections**. This is the account
 that will actually do Phase 7's code generation, off your Anthropic quota.
 
-## 3. Create an MCP-capable API key
+## 3. Keep the server running without a terminal
+
+Don't rely on leaving `omniroute serve` running in a terminal window you
+might close later — a real test lost the connection this way (closing the
+window that was running it killed the server, and every MCP call started
+failing with `ECONNREFUSED` until it was noticed and restarted). Enable
+autostart instead, so it runs at login as a background process:
+
+```powershell
+& "C:\tools\node-v24.x.x-win-x64\omniroute.cmd" autostart enable
+& "C:\tools\node-v24.x.x-win-x64\omniroute.cmd" autostart status
+```
+
+This matters more if you're using the Claude Code **desktop app** rather
+than a terminal — there's no terminal window to notice has closed.
+
+## 4. Create an MCP-capable API key
 
 Go to **API Keys** (or **Endpoints**) in the dashboard and create a new key
 with **both** of these scopes — a key with only `mcp:connect` can establish
@@ -64,7 +80,7 @@ Or via the CLI:
 Copy the returned `sk-...` key — you'll need it in step 5. **Never commit
 this key anywhere, including this repo.**
 
-## 4. Enable MCP itself and set its transport to Streamable HTTP
+## 5. Enable MCP itself and set its transport to Streamable HTTP
 
 These are two separate application settings, both of which default to a
 state that doesn't work with Claude Code, and neither is exposed as an
@@ -87,7 +103,7 @@ Confirm it's actually up before continuing:
 & "C:\tools\node-v24.x.x-win-x64\omniroute.cmd" health
 ```
 
-## 5. Register the MCP server with Claude Code
+## 6. Register the MCP server with Claude Code
 
 Add this to `~/.claude.json`'s top-level `mcpServers` block (global scope —
 available in every terminal Claude Code session on this machine):
@@ -102,15 +118,21 @@ available in every terminal Claude Code session on this machine):
 }
 ```
 
-## 6. Verify the connection
+## 7. Verify the connection
 
-Start (or restart) a Claude Code terminal session and run `/mcp`. You should
-see `omniroute` listed with a green check and a tool count (dozens of
-tools — `omniroute_get_health`, `omniroute_route_request`,
-`omniroute_list_models_catalog`, and more). If it shows "failed" or
-"disabled" instead, see `docs/TROUBLESHOOTING.md`.
+Start (or restart) a Claude Code terminal session, or open a fresh Code tab
+in the desktop app, and run `/mcp`. You should see `omniroute` listed with a
+green check and a tool count (dozens of tools — `omniroute_get_health`,
+`omniroute_route_request`, `omniroute_list_models_catalog`, and more). If it
+shows "failed" or "disabled" instead, see `docs/TROUBLESHOOTING.md`.
 
-## 7. Install the skill
+**Desktop app note:** confirmed working, but a newly registered MCP server
+was not picked up by an already-running desktop conversation, or even a new
+conversation in an already-running app instance — only a **full restart of
+the desktop app** actually reloaded it. Do that before concluding it's
+broken.
+
+## 8. Install the skill
 
 Copy `SKILL.md` from this repo into `~/.claude/skills/ai-kaderskill-omniroute/SKILL.md`
 (create the folder if it doesn't exist). Claude Code picks up skills from

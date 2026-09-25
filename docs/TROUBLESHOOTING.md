@@ -9,12 +9,31 @@ match it directly.
 **`Server rejected the configured Authorization header (HTTP 403)`**
 The API key doesn't have the `manage` scope (or `mcp:connect`, or both).
 Create a new key with `scopes: ["manage", "mcp:connect"]` — see
-`docs/SETUP.md` step 3 — and update `~/.claude.json` with the new key.
+`docs/SETUP.md` step 4 — and update `~/.claude.json` with the new key.
 
 **`MCP server is disabled. Enable it from the Endpoints page.`**
 OmniRoute's `mcpEnabled` application setting defaults to `false` and isn't
 exposed as a working toggle in the dashboard at the time of writing. Set it
-via the settings API (`docs/SETUP.md` step 4) and restart the server.
+via the settings API (`docs/SETUP.md` step 5) and restart the server.
+
+**Configured but shows `ECONNREFUSED: Unable to connect` (not "failed" or "disabled" — just refused)**
+This means Claude Code recognizes the `omniroute` entry but the OmniRoute
+server process itself isn't running or isn't reachable at the URL you
+registered — a config problem would show a different error (403, 400, a
+disabled/stdio message); a refused connection means nothing is listening on
+that port at all. Run `omniroute health`; if it says "Server not running,"
+start it (`omniroute serve`), or better, enable `omniroute autostart` so
+this doesn't happen again after a terminal window closes or a reboot (see
+`docs/SETUP.md` step 3).
+
+**Desktop app: `omniroute` doesn't show up at all, in any conversation**
+A newly added or newly working MCP server is not picked up by a
+conversation that was already running, and — confirmed by a real test —
+not picked up by a brand-new conversation in an already-running app
+instance either. Only a full restart of the desktop app itself reloaded it.
+If it's still missing after a full restart, check the app has its own
+MCP-servers management UI (distinct from a raw `~/.claude.json` edit) and
+that the entry actually landed there.
 
 **`MCP transport is set to "stdio", not "streamable-http". Change it from Settings.`**
 OmniRoute's `mcpTransport` setting defaults to `stdio`, which doesn't match
